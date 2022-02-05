@@ -35,9 +35,14 @@ const Box = styled.div`
   }
 `;
 
+const Title = styled.span`
+  color: ${(props) => props.theme.textColor};
+`;
+
 function App() {
   return (
     <Wrapper>
+      <Title>Title</Title>
       <Box>
         <Emoji>🎇</Emoji>
         <Input />
