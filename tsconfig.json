@@ -14,15 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "plugins": [
-      {
-        "name": "typescript-styled-plugin",
-        "lint": {
-          "validProperties": "shadow-color,shadow-opacity,shadow-offset"
-        }
-      }
-    ]
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }
