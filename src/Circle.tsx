@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 interface ContainerProps {
@@ -15,6 +16,10 @@ const Container = styled.div<ContainerProps>`
 `;
 
 const Circle = ({ bgColor, borderColor }: CircleProps) => {
+  /* typescript를 사용하면 state의 값에 대한 type을 default값에 의해 자동으로 알아서 잡아준다 */
+  /* useState에 사용되는 state값의 type을 정하는 방법 */
+  const [value, setValue] = useState<number | string>(0);
+  setValue("sksk");
   return (
     <Container bgColor={bgColor} borderColor={borderColor ?? "red"}></Container>
   );
