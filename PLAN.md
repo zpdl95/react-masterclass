@@ -4,6 +4,7 @@
 4. tsconfig.json 생성
 5. npm i react-router-dom@5.3.0
 6. npm i react-query
+7. npm install --save react-apexcharts apexcharts -> apex차트 `https://apexcharts.com/`
 
 Prop-Types = 코드 실행뒤에 컴포넌트 prop에 문제가 있다고 알려줌
 typescript = 코드 실행전에 문제가 있다고 알려줌
