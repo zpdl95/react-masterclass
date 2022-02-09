@@ -26,9 +26,9 @@ const Container = styled.div`
 
 const Header = styled.header`
   height: 15vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  place-items: center;
 `;
 
 const Loader = styled.span`
@@ -81,6 +81,10 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const Back = styled.span`
+  font-size: 30px;
 `;
 
 interface RouteParams {
@@ -181,6 +185,9 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <Link to={"/"}>
+          <Back>⬅</Back>
+        </Link>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
