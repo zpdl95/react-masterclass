@@ -39,27 +39,37 @@ function Chart({ coinId }: IChart) {
             stroke: {
               width: 3,
             },
-            xaxis: { axisTicks: { show: false }, axisBorder: { show: false } },
+            xaxis: {
+              categories: data?.map((day) => day.time_open),
+              type: "datetime",
+              axisTicks: { show: false },
+              axisBorder: { show: false },
+            },
             yaxis: { show: false },
+            fill: {
+              type: "gradient",
+              gradient: {
+                gradientToColors: ["blue", "red"],
+                stops: [0, 100],
+              },
+            },
+            tooltip: {
+              y: {
+                formatter: (value) => `$${value.toFixed(2)}`,
+              },
+              x: {
+                format: "yy년MM월dd일",
+              },
+            },
           }}
           series={[
             {
               name: "openPrice",
-              data: data?.map((day) => {
-                return {
-                  x: new Date(day.time_open).toLocaleDateString("kr"),
-                  y: day.open.toFixed(2),
-                };
-              }),
+              data: data?.map((day) => day.open),
             },
             {
               name: "closePrice",
-              data: data?.map((day) => {
-                return {
-                  x: new Date(day.time_close).toLocaleDateString("kr"),
-                  y: day.close.toFixed(2),
-                };
-              }),
+              data: data?.map((day) => day.close),
             },
           ]}
         />
