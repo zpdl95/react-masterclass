@@ -160,7 +160,7 @@ interface ICoinProps {
   isDark: boolean;
 }
 
-function Coin({ isDark }: ICoinProps) {
+function Coin() {
   const { coinId } = useParams<RouteParams>();
   /* react-router-DOM이 보내주는 location-object */
   const { state } = useLocation<RouteState>();
@@ -237,7 +237,7 @@ function Coin({ isDark }: ICoinProps) {
               <Price />
             </Route>
             <Route path={`/:id/chart`}>
-              <Chart isDark={isDark} coinId={coinId} />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>

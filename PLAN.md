@@ -6,6 +6,7 @@
 6. npm i react-query
 7. npm install --save react-apexcharts apexcharts -> apex차트 `https://apexcharts.com/`
 8. npm i react-helmet -> html의 head를 변경하는 컴포넌트
+9. npm i recoil -> state management, Redux와 비슷함
 
 Prop-Types = 코드 실행뒤에 컴포넌트 prop에 문제가 있다고 알려줌
 typescript = 코드 실행전에 문제가 있다고 알려줌
