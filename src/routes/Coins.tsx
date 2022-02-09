@@ -1,8 +1,10 @@
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { isDarkAtom } from "../atoms";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -68,6 +70,9 @@ interface ICoins {
 
 function Coins() {
   const { isLoading, data } = useQuery<ICoins[]>("allCoins", fetchCoins);
+  /* useSetRecoilState = atom으로 만든 변수 변경하기 */
+  const setIsDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkMode = () => setIsDarkAtom((prev) => !prev);
   return (
     <Container>
       <Helmet>
@@ -75,7 +80,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>코인</Title>
-        <button>Toggle Dark Mode</button>
+        <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
       </Header>
       {isLoading && <Loader>Loading...</Loader>}
       {!isLoading && (

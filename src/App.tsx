@@ -68,7 +68,7 @@ a {
 `;
 
 function App() {
-  /* atom으로 만든 변수 가져오기 */
+  /* useRecoilValue = atom으로 만든 변수 가져오기 */
   const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
