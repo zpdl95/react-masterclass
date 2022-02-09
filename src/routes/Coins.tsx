@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
@@ -8,6 +7,7 @@ import { fetchCoins } from "../api";
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
   font-size: 48px;
+  transition: color 0.5s ease-in-out;
 `;
 
 const Container = styled.div`
@@ -32,10 +32,11 @@ const Loader = styled.span`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
+  background-color: ${(props) => props.theme.textColor};
   color: ${(props) => props.theme.bgColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  transition: background-color 0.5s ease-in-out;
   a {
     display: flex;
     align-items: center;
