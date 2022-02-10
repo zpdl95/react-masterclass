@@ -27,8 +27,10 @@ import { useForm } from "react-hook-form";
 
 interface IForm {
   email: string;
+  name: string;
   password: string;
   password_validation: string;
+  extraError?: string;
 }
 
 export default ToDoList;
@@ -38,17 +40,26 @@ function ToDoList() {
   /* handleSubmit = 제출의 제어와 검증이 성공했을때 실패했을때의 함수를 실행함 */
   /* formState = form의 상태에 대해 알려줌 */
   /* useForm({defaultValues:})을 사용함으로써 기본값을 정해줄 수 있음 */
+  /* setError = error를 발생시키는 함수  */
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: { email: "@gmail.com" },
   });
   const onValid = (data: IForm) => {
-    console.log(data);
+    if (data.password !== data.password_validation) {
+      setError(
+        "password_validation",
+        { message: "패스워드가 다릅니다." },
+        { shouldFocus: true }
+      );
+    }
+    /* error를 추가하는 방법 */
+    // setError("extraError", { message: "서버가 끊켰습니다" });
   };
-  console.log(errors);
   return (
     <div>
       {/* handleSubmit() = 이 함수는 일단 실행을 시켜야 한다 그리고 input검증이 끝나면 결과값을 준다 */}
@@ -65,6 +76,19 @@ function ToDoList() {
           placeholder="Write your email"
         />
         <span>{errors?.email?.message}</span>
+        <input
+          {...register("name", {
+            required: true,
+            /* validate = boolean or string or function or object 가능 */
+            /* validate에 async를 사용해서 비동기로 만들어 서버와 통신 가능 */
+            validate: {
+              noNico: async (value) =>
+                !value.includes("nico") || "'nico'를 포함하고 있습니다",
+            },
+          })}
+          placeholder="Write your name"
+        />
+        <span>{errors?.name?.message}</span>
         <input
           {...register("password", {
             required: true,
@@ -83,7 +107,9 @@ function ToDoList() {
           type="password"
           placeholder="Write your password again"
         />
+        <span>{errors?.password_validation?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
