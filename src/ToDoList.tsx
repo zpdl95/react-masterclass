@@ -28,23 +28,37 @@ export default ToDoList;
 function ToDoList() {
   /* register = value, onChange()등 input에 필요한 prop을 다 가지고 있음 */
   /* watch = register에 있는 value값을 추적함 */
-  const { register, watch } = useForm();
-  console.log(watch());
+  /* handleSubmit = 제출의 제어와 검증이 성공했을때 실패했을때의 함수를 실행함 */
+  /* formState = form의 상태에 대해 알려줌 */
+  const { register, handleSubmit, formState } = useForm();
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+  console.log(formState.errors);
   return (
     <div>
-      <form>
+      {/* handleSubmit() = 이 함수는 일단 실행을 시켜야 한다 그리고 input검증이 끝나면 결과값을 준다 */}
+      <form onSubmit={handleSubmit(onValid)}>
         <input
-          {...register("email")}
+          {...register("email", { required: true })}
           type="email"
           placeholder="Write your email"
         />
         <input
-          {...register("password")}
+          {...register("password", {
+            required: true,
+            minLength: {
+              value: 6,
+              message: "You need to longer password",
+            },
+          })}
           type="password"
           placeholder="Write your password"
         />
         <input
-          {...register("password_validation")}
+          {...register("password_validation", {
+            required: "It is same to password",
+          })}
           type="password"
           placeholder="Write your password again"
         />
