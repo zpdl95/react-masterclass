@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import ToDoList from "./ToDoList";
+import ToDoList from "./components/ToDoList";
 
 const GlobalStyle = createGlobalStyle`
 /* "https://fonts.google.com"에서 폰트를 받아옴 */
