@@ -13,9 +13,10 @@ function ToDo({ text, category, id }: IToDoState) {
     } = e;
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-      const oldToDo = oldToDos[targetIndex];
-      const newToDo = { text, id, category: name };
-      return oldToDos;
+      const newToDo = { text, id, category: name as IToDoState["category"] };
+      const newToDos = [...oldToDos];
+      newToDos[targetIndex] = newToDo;
+      return newToDos;
     });
   };
   return (
@@ -40,8 +41,21 @@ function ToDo({ text, category, id }: IToDoState) {
   );
 }
 export default ToDo;
-// function ToDo({ text, category }: IToDoState) {
-//   const onClick = (newCategory: IToDoState["category"]) => {};
+
+// function ToDo({ text, category, id }: IToDoState) {
+//   const setToDos = useSetRecoilState(toDoState);
+
+//   const onClick = (newCategory: IToDoState["category"]) => {
+//     setToDos((oldToDos) => {
+//       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
+//       const newToDo = { text, id, category: newCategory };
+//       return [
+//         ...oldToDos.slice(0, targetIndex),
+//         newToDo,
+//         ...oldToDos.slice(targetIndex + 1),
+//       ];
+//     });
+//   };
 //   return (
 //     <li>
 //       <span>{text}</span>
