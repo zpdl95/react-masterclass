@@ -20,7 +20,7 @@ export const categoryState = atom<Categories>({
 
 export const toDoState = atom<IToDoState[]>({
   key: "toDos",
-  default: [],
+  default: JSON.parse(localStorage.getItem("toDos") as string) || [],
 });
 
 /* selector = atom의 output을 변형시킴 */
