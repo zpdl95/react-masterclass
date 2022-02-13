@@ -9,18 +9,20 @@ function App() {
         {/* Droppable = children으로 함수를 받는다 */}
         {/* id도 받아야함 */}
         <Droppable droppableId="one">
-          {() => (
-            <ul>
+          {(magic) => (
+            <ul ref={magic.innerRef} {...magic.droppableProps}>
               {/* Draggable = children으로 함수를 받는다 */}
               {/* id와 index를 받아야함 */}
               <Draggable draggableId="first" index={0}>
-                {() => <li>one</li>}
-              </Draggable>
-              <Draggable draggableId="second" index={1}>
-                {() => <li>two</li>}
-              </Draggable>
-              <Draggable draggableId="third" index={2}>
-                {() => <li>three</li>}
+                {(magic) => (
+                  <li
+                    ref={magic.innerRef}
+                    {...magic.draggableProps}
+                    {...magic.dragHandleProps}
+                  >
+                    one
+                  </li>
+                )}
               </Draggable>
             </ul>
           )}
