@@ -7,6 +7,7 @@ import {
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./atoms";
+import DragableCard from "./DragableCard";
 
 const Wrapper = styled.div`
   width: 500px;
@@ -28,13 +29,6 @@ const Board = styled.div`
   padding-top: 30px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 10px;
-`;
-
-const Card = styled.div`
-  background-color: ${(props) => props.theme.cardColor};
-  padding: 10px 20px;
-  border-radius: 10px;
-  margin-bottom: 5px;
 `;
 
 function App() {
@@ -62,17 +56,7 @@ function App() {
                 {/* id와 index를 받아야함 */}
                 {toDos.map((toDo, index) => (
                   /* key값과 draggableId값이 다르면 오류가 발생함 */
-                  <Draggable key={toDo} draggableId={toDo} index={index}>
-                    {(magic) => (
-                      <Card
-                        ref={magic.innerRef}
-                        {...magic.draggableProps}
-                        {...magic.dragHandleProps}
-                      >
-                        {toDo}
-                      </Card>
-                    )}
-                  </Draggable>
+                  <DragableCard key={toDo} toDo={toDo} index={index} />
                 ))}
                 {/* placeholder = 빠진요소의 자리를 채워줌 */}
                 {magic.placeholder}
