@@ -39,7 +39,15 @@ const Card = styled.div`
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ destination, source }: DropResult) => {};
+  const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const toDosCopy = [...oldToDos];
+      toDosCopy.splice(source.index, 1);
+      toDosCopy.splice(destination?.index, 0, draggableId);
+      return toDosCopy;
+    });
+  };
   return (
     /* onDragEnd = 드래그가 끝났을때 실행되는 함수 */
     <DragDropContext onDragEnd={onDragEnd}>
@@ -53,7 +61,8 @@ function App() {
                 {/* Draggable = children으로 함수를 받는다 */}
                 {/* id와 index를 받아야함 */}
                 {toDos.map((toDo, index) => (
-                  <Draggable key={index} draggableId={toDo} index={index}>
+                  /* key값과 draggableId값이 다르면 오류가 발생함 */
+                  <Draggable key={toDo} draggableId={toDo} index={index}>
                     {(magic) => (
                       <Card
                         ref={magic.innerRef}
