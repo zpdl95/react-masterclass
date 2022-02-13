@@ -5,10 +5,15 @@ export const minueState = atom({
   default: 0,
 });
 
-export const hourSelector = selector({
+/* selector = 마치 중계기 같은 역할을 한다 */
+export const hourSelector = selector<number>({
   key: "hour",
   get: ({ get }) => {
     const minute = get(minueState);
     return minute / 60;
+  },
+  set: ({ set }, newValue) => {
+    const minute = Number(newValue) * 60;
+    set(minueState, minute);
   },
 });
