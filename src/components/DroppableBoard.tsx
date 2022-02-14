@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DragableCard from "./DragableCard";
 
 const Board = styled.div`
+  width: 300px;
   padding: 10px 10px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 10px;
@@ -13,6 +14,11 @@ const Title = styled.h2`
   margin-bottom: 10px;
   font-weight: 600;
   font-size: 20px;
+`;
+
+const MagicBoard = styled.div`
+  height: 80%;
+  background-color: red;
 `;
 
 interface IDroppableBoard {
@@ -26,7 +32,7 @@ function DroppableBoard({ toDos, boardId }: IDroppableBoard) {
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
         {(magic) => (
-          <div ref={magic.innerRef} {...magic.droppableProps}>
+          <MagicBoard ref={magic.innerRef} {...magic.droppableProps}>
             {/* Draggable = children으로 함수를 받는다 */}
             {/* id와 index를 받아야함 */}
             {toDos.map((toDo, index) => (
@@ -35,7 +41,7 @@ function DroppableBoard({ toDos, boardId }: IDroppableBoard) {
             ))}
             {/* placeholder = 빠진요소의 자리를 채워줌 */}
             {magic.placeholder}
-          </div>
+          </MagicBoard>
         )}
       </Droppable>
     </Board>

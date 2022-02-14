@@ -5,9 +5,9 @@ import { toDoState } from "./atoms";
 import DroppableBoard from "./components/DroppableBoard";
 
 const Wrapper = styled.div`
-  width: 500px;
-  height: 800px;
   display: flex;
+  width: 100vw;
+  height: 100vh;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -24,6 +24,7 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = (info: DropResult) => {
     const { draggableId, destination, source } = info;
+    if (!destination) return;
     if (destination?.droppableId === source.droppableId) {
       if (destination.index === source.index) return;
       setToDos((allBoards) => {
@@ -33,6 +34,19 @@ function App() {
         return {
           ...allBoards,
           [source.droppableId]: boardCopy,
+        };
+      });
+    }
+    if (destination.droppableId !== source.droppableId) {
+      setToDos((allBoards) => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destBoard = [...allBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destBoard.splice(destination.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destBoard,
         };
       });
     }
