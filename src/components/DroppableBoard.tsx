@@ -2,11 +2,19 @@ import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DragableCard from "./DragableCard";
 
+interface IMagicBoard {
+  isDraggingOver: boolean;
+  isDraggingFromThis: boolean;
+}
+
 const Board = styled.div`
   width: 300px;
+  min-height: 300px;
   padding: 10px 10px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.h2`
@@ -16,9 +24,11 @@ const Title = styled.h2`
   font-size: 20px;
 `;
 
-const MagicBoard = styled.div`
-  height: 80%;
-  background-color: red;
+const MagicBoard = styled.div<IMagicBoard>`
+  background-color: ${(props) =>
+    props.isDraggingOver ? "red" : props.isDraggingFromThis ? "pink" : "blue"};
+  flex-grow: 1;
+  transition: background-color 0.3s ease-in-out;
 `;
 
 interface IDroppableBoard {
@@ -31,8 +41,13 @@ function DroppableBoard({ toDos, boardId }: IDroppableBoard) {
     <Board>
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
-        {(magic) => (
-          <MagicBoard ref={magic.innerRef} {...magic.droppableProps}>
+        {(magic, info) => (
+          <MagicBoard
+            isDraggingOver={info.isDraggingOver}
+            isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+            ref={magic.innerRef}
+            {...magic.droppableProps}
+          >
             {/* Draggable = children으로 함수를 받는다 */}
             {/* id와 index를 받아야함 */}
             {toDos.map((toDo, index) => (
