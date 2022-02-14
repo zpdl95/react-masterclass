@@ -1,13 +1,8 @@
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./atoms";
-import DragableCard from "./DragableCard";
+import DroppableBoard from "./components/DroppableBoard";
 
 const Wrapper = styled.div`
   width: 500px;
@@ -22,25 +17,19 @@ const Boards = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: 100%;
-`;
-
-const Board = styled.div`
-  padding: 20px 10px;
-  padding-top: 30px;
-  background-color: ${(props) => props.theme.boardColor};
-  border-radius: 10px;
+  gap: 10px;
 `;
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
-    if (!destination) return;
-    setToDos((oldToDos) => {
-      const toDosCopy = [...oldToDos];
-      toDosCopy.splice(source.index, 1);
-      toDosCopy.splice(destination?.index, 0, draggableId);
-      return toDosCopy;
-    });
+    // if (!destination) return;
+    // setToDos((oldToDos) => {
+    //   const toDosCopy = [...oldToDos];
+    //   toDosCopy.splice(source.index, 1);
+    //   toDosCopy.splice(destination?.index, 0, draggableId);
+    //   return toDosCopy;
+    // });
   };
   return (
     /* onDragEnd = 드래그가 끝났을때 실행되는 함수 */
@@ -49,20 +38,13 @@ function App() {
         {/* Droppable = children으로 함수를 받는다 */}
         {/* id도 받아야함 */}
         <Boards>
-          <Droppable droppableId="one">
-            {(magic) => (
-              <Board ref={magic.innerRef} {...magic.droppableProps}>
-                {/* Draggable = children으로 함수를 받는다 */}
-                {/* id와 index를 받아야함 */}
-                {toDos.map((toDo, index) => (
-                  /* key값과 draggableId값이 다르면 오류가 발생함 */
-                  <DragableCard key={toDo} toDo={toDo} index={index} />
-                ))}
-                {/* placeholder = 빠진요소의 자리를 채워줌 */}
-                {magic.placeholder}
-              </Board>
-            )}
-          </Droppable>
+          {Object.keys(toDos).map((boardId) => (
+            <DroppableBoard
+              key={boardId}
+              toDos={toDos[boardId]}
+              boardId={boardId}
+            />
+          ))}
         </Boards>
       </Wrapper>
     </DragDropContext>
