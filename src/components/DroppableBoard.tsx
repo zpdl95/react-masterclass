@@ -1,5 +1,7 @@
 import { Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { IToDo } from "../atoms";
 import DragableCard from "./DragableCard";
 
 interface IMagicBoard {
@@ -24,6 +26,13 @@ const Title = styled.h2`
   font-size: 20px;
 `;
 
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
+
 const MagicBoard = styled.div<IMagicBoard>`
   background-color: ${(props) =>
     props.isDraggingOver
@@ -37,14 +46,29 @@ const MagicBoard = styled.div<IMagicBoard>`
 `;
 
 interface IDroppableBoard {
-  toDos: string[];
+  toDos: IToDo[];
   boardId: string;
 }
 
+interface IForm {
+  toDo: string;
+}
+
 function DroppableBoard({ toDos, boardId }: IDroppableBoard) {
+  const { register, setValue, handleSubmit } = useForm<IForm>();
+  const onVaild = ({ toDo }: IForm) => {
+    setValue("toDo", "");
+  };
   return (
     <Board>
       <Title>{boardId}</Title>
+      <Form onSubmit={handleSubmit(onVaild)}>
+        <input
+          {...register("toDo", { required: "할 일을 적으세요" })}
+          type="text"
+          placeholder={`${boardId}에 할 일을 추가`}
+        />
+      </Form>
       <Droppable droppableId={boardId}>
         {(magic, info) => (
           <MagicBoard
@@ -57,7 +81,12 @@ function DroppableBoard({ toDos, boardId }: IDroppableBoard) {
             {/* id와 index를 받아야함 */}
             {toDos.map((toDo, index) => (
               /* key값과 draggableId값이 다르면 오류가 발생함 */
-              <DragableCard key={toDo} toDo={toDo} index={index} />
+              <DragableCard
+                key={toDo.id}
+                index={index}
+                toDoId={toDo.id}
+                toDoText={toDo.text}
+              />
             ))}
             {/* placeholder = 빠진요소의 자리를 채워줌 */}
             {magic.placeholder}
