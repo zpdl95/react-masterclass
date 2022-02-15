@@ -10,7 +10,7 @@ interface IMagicBoard {
 const Board = styled.div`
   width: 300px;
   min-height: 300px;
-  padding: 10px 10px;
+  padding: 10px 0px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 10px;
   display: flex;
@@ -26,9 +26,14 @@ const Title = styled.h2`
 
 const MagicBoard = styled.div<IMagicBoard>`
   background-color: ${(props) =>
-    props.isDraggingOver ? "red" : props.isDraggingFromThis ? "pink" : "blue"};
+    props.isDraggingOver
+      ? "#a55eea"
+      : props.isDraggingFromThis
+      ? "#9980FA"
+      : props.theme.boardColor};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
+  padding: 10px 10px;
 `;
 
 interface IDroppableBoard {
