@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 
 export interface IToDo {
   id: number;
@@ -12,7 +12,7 @@ interface ItoDoState {
 
 export const toDoState = atom<ItoDoState>({
   key: "toDos",
-  default: {
+  default: JSON.parse(localStorage.getItem("toDos") as string) || {
     "To Do": [],
     Doing: [],
     Done: [],

@@ -1,6 +1,8 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { toDoState } from "../atoms";
 
 const Card = styled.div<{ isDragging: boolean }>`
   background-color: ${(props) =>
@@ -10,15 +12,28 @@ const Card = styled.div<{ isDragging: boolean }>`
   border-radius: 10px;
   margin-bottom: 5px;
   transition: background-color 1s ease-out, box-shadow 1s ease-out;
+  display: flex;
+  justify-content: space-between;
 `;
 
 interface IDragableCard {
   toDoId: number;
   toDoText: string;
   index: number;
+  boardId: string;
 }
 
-function DragableCard({ toDoId, toDoText, index }: IDragableCard) {
+function DragableCard({ toDoId, toDoText, index, boardId }: IDragableCard) {
+  const setToDos = useSetRecoilState(toDoState);
+
+  const onClick = () => {
+    setToDos((allBoards) => {
+      return {
+        ...allBoards,
+        [boardId]: allBoards[boardId].filter((toDo) => toDo.id !== toDoId),
+      };
+    });
+  };
   return (
     <Draggable draggableId={toDoId + ""} index={index}>
       {(magic, snapshot) => (
@@ -28,7 +43,8 @@ function DragableCard({ toDoId, toDoText, index }: IDragableCard) {
           {...magic.draggableProps}
           {...magic.dragHandleProps}
         >
-          {toDoText}
+          <span>{toDoText}</span>
+          <button onClick={onClick}>❌</button>
         </Card>
       )}
     </Draggable>
