@@ -9,6 +9,7 @@
 9. npm i recoil -> state management, Redux와 비슷함
 10. npm i react-hook-form -> form태그와 그에 필요한 state값을 쉽게 사용하는 라이브러리 `https://react-hook-form.com/kr/api/`
 11. npm i react-beautiful-dnd -> 드래그 앤 드롭 라이브러리
+12. npm i framer-motion -> 애니매이션 컴포넌트 설치, react-script버전이 5버전보다 낮으면 CRACO를 사용해서 구성요소를 덮어써야한다.
 
 Prop-Types = 코드 실행뒤에 컴포넌트 prop에 문제가 있다고 알려줌
 typescript = 코드 실행전에 문제가 있다고 알려줌
