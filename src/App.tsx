@@ -9,7 +9,8 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const Box = styled.div`
+/* 애니메이션 컴포넌트를 스타일드컴포넌트 함수에 넣어서 사용 */
+const Box = styled(motion.div)`
   width: 200px;
   height: 200px;
   background-color: white;
@@ -20,8 +21,14 @@ const Box = styled.div`
 function App() {
   return (
     <Wrapper>
-      <Box />
-      <motion.div></motion.div>
+      <Box
+        /* transition = 실질적인 애니메이션 */
+        transition={{ type: "spring", mass: 5 }}
+        /* initial = keframe의 0%, from과 같다 */
+        initial={{ scale: 0 }}
+        /* animate = keframe의 100%, to와 같다 */
+        animate={{ scale: 1, rotateZ: 360 }}
+      />
     </Wrapper>
   );
 }
