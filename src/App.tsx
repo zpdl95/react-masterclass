@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, useMotionValue, Variants } from "framer-motion";
+import { motion, useMotionValue, useTransform, Variants } from "framer-motion";
 import { useEffect } from "react";
 
 const Wrapper = styled.div`
@@ -28,16 +28,15 @@ const boxVariants: Variants = {
 function App() {
   /* useMotionValue = React의 rerendering에 영향을 주지 않는 값 */
   const x = useMotionValue(0);
+  /* useTransform = interpolation을 사용하는 방법
+  x좌표값의 범위를 지정하고 scale값의 범위로 치환 */
+  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
   useEffect(() => {
-    /* motionValue의 변화를 알 수 있고 */
-    /* motionValue의 값을 알 수 있고 */
-    x.onChange(() => console.log(x.get()));
-  }, [x]);
+    scale.onChange(() => console.log(scale.get()));
+  }, [scale]);
   return (
     <Wrapper>
-      {/* motionValue의 값을 설정할 수 있다 */}
-      <button onClick={() => x.set(200)}>버튼</button>
-      <Box style={{ x }} drag="x" dragSnapToOrigin />
+      <Box style={{ x, scale }} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
 }
