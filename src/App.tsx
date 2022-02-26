@@ -1,13 +1,20 @@
 import styled from "styled-components";
-import { motion, useMotionValue, useTransform, Variants } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useViewportScroll,
+  Variants,
+} from "framer-motion";
 import { useEffect } from "react";
 
-const Wrapper = styled.div`
-  height: 100vh;
+const Wrapper = styled(motion.div)`
+  height: 300vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: ;
 `;
 
 /* 애니메이션 컴포넌트를 스타일드컴포넌트 함수에 넣어서 사용 */
@@ -28,14 +35,20 @@ const boxVariants: Variants = {
 function App() {
   /* useMotionValue = React의 rerendering에 영향을 주지 않는 값 */
   const x = useMotionValue(0);
-  /* useTransform = interpolation을 사용하는 방법
-  x좌표값의 범위를 지정하고 scale값의 범위로 치환 */
-  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
-  useEffect(() => {
-    scale.onChange(() => console.log(scale.get()));
-  }, [scale]);
+  const gradient = useTransform(
+    x,
+    [-800, 0, 800],
+    [
+      "linear-gradient(135deg, rgb(238, 0, 0), rgb(238, 0, 153))",
+      "linear-gradient(135deg, rgb(238, 0, 153), rgb(221, 0, 238))",
+      "linear-gradient(135deg, rgb(221, 0, 238), rgb(143, 0, 238))",
+    ]
+  );
+  /* useViewportScroll = 페이지에서의 스크롤링 값 */
+  const { scrollYProgress } = useViewportScroll();
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.1, 1, 2]);
   return (
-    <Wrapper>
+    <Wrapper style={{ background: gradient }}>
       <Box style={{ x, scale }} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
