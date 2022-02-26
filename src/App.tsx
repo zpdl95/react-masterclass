@@ -1,20 +1,10 @@
 import styled from "styled-components";
-import { motion, Variants } from "framer-motion";
-import { useRef } from "react";
+import { motion, useMotionValue, Variants } from "framer-motion";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const BiggerBox = styled.div`
-  width: 400px;
-  height: 400px;
-  border-radius: 40px;
-  background-color: rgba(255, 255, 255, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,26 +26,18 @@ const boxVariants: Variants = {
 };
 
 function App() {
-  const BiggerBoxRef = useRef<HTMLDivElement>(null);
+  /* useMotionValue = React의 rerendering에 영향을 주지 않는 값 */
+  const x = useMotionValue(0);
+  useEffect(() => {
+    /* motionValue의 변화를 알 수 있고 */
+    /* motionValue의 값을 알 수 있고 */
+    x.onChange(() => console.log(x.get()));
+  }, [x]);
   return (
     <Wrapper>
-      <BiggerBox ref={BiggerBoxRef}>
-        <Box
-          /* drag = 컴포넌트에 드래그가능 적용 */
-          drag
-          /* dragConstraints = 범위제약 */
-          /* useRef를 써서 컴포넌트자체를 제약범위로 지정 */
-          dragConstraints={BiggerBoxRef}
-          /* dragSnapToOrigin = 기존위치로 돌아감 */
-          dragSnapToOrigin
-          /* dragElastic = 당겨지는 힘. 숫자가 커지면 커서를 완벽하게 따라온다 */
-          dragElastic={0.5}
-          variants={boxVariants}
-          whileHover={"hover"}
-          whileTap={"click"}
-          whileDrag={"drag"}
-        />
-      </BiggerBox>
+      {/* motionValue의 값을 설정할 수 있다 */}
+      <button onClick={() => x.set(200)}>버튼</button>
+      <Box style={{ x }} drag="x" dragSnapToOrigin />
     </Wrapper>
   );
 }
