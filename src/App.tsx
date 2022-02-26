@@ -1,9 +1,20 @@
 import styled from "styled-components";
 import { motion, Variants } from "framer-motion";
+import { useRef } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BiggerBox = styled.div`
+  width: 400px;
+  height: 400px;
+  border-radius: 40px;
+  background-color: rgba(255, 255, 255, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,26 +31,31 @@ const Box = styled(motion.div)`
 
 /* Variants = motion패키지에 있는 Variant type  */
 const boxVariants: Variants = {
-  hover: { scale: 1.5, rotate: 90 },
+  hover: { scale: 1, rotate: 90 },
   click: { scale: 1, borderRadius: "50%" },
-  drag: {
-    /* drag 애니메이션 컬러를 string이 아니라 number로 주면 색변화도 애니메이션이 적용된다 */
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-    transition: { duration: 5 },
-  },
 };
 
 function App() {
+  const BiggerBoxRef = useRef<HTMLDivElement>(null);
   return (
     <Wrapper>
-      <Box
-        /* drag = 컴포넌트에 드래그가능 적용 */
-        drag
-        variants={boxVariants}
-        whileHover={"hover"}
-        whileTap={"click"}
-        whileDrag={"drag"}
-      />
+      <BiggerBox ref={BiggerBoxRef}>
+        <Box
+          /* drag = 컴포넌트에 드래그가능 적용 */
+          drag
+          /* dragConstraints = 범위제약 */
+          /* useRef를 써서 컴포넌트자체를 제약범위로 지정 */
+          dragConstraints={BiggerBoxRef}
+          /* dragSnapToOrigin = 기존위치로 돌아감 */
+          dragSnapToOrigin
+          /* dragElastic = 당겨지는 힘. 숫자가 커지면 커서를 완벽하게 따라온다 */
+          dragElastic={0.5}
+          variants={boxVariants}
+          whileHover={"hover"}
+          whileTap={"click"}
+          whileDrag={"drag"}
+        />
+      </BiggerBox>
     </Wrapper>
   );
 }
