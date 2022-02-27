@@ -14,72 +14,42 @@ const Wrapper = styled(motion.div)`
 
 const Box = styled(motion.div)`
   width: 300px;
-  height: 200px;
-  position: absolute;
+  height: 300px;
   top: 100px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.3);
   background-color: white;
   border-radius: 20px;
   display: flex;
+  font-size: 28px;
   justify-content: center;
   align-items: center;
-  font-size: 28px;
 `;
 
-const boxVariants: Variants = {
-  entry: (back: boolean) => ({
-    x: back ? -500 : 500,
-    opacity: 0,
-    scale: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-    },
-  },
-  exit: (back: boolean) => ({
-    x: back ? 500 : -500,
-    opacity: 0,
-    scale: 0,
-    transition: { duration: 0.5 },
-  }),
-};
+const Circle = styled(motion.div)`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: teal;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+`;
 
 function App() {
-  const [visible, setVisible] = useState(1);
-  const [back, setBack] = useState(false);
-  const nextPlease = () => {
-    setBack(false);
-    setVisible((prev) => (prev === 10 ? 10 : prev + 1));
-  };
-  const prevPlease = () => {
-    setBack(true);
-    setVisible((prev) => (prev === 1 ? 1 : prev - 1));
-  };
+  const [clicked, setClicked] = useState(false);
+  const toggleClicked = () => setClicked((prev) => !prev);
   return (
-    <Wrapper>
-      {/* AnimatePresence에도 custom을 넣어줘야 바로바로 동작함 */}
-      {/* exitBeforeEnter = exit애니메이션이 끝나면 다음 컴포넌트가 생성됨. 단점 느려보임 */}
-      <AnimatePresence exitBeforeEnter custom={back}>
-        {
-          <Box
-            /* custom = variants에 변수를 넘겨줌 */
-            custom={back}
-            variants={boxVariants}
-            initial="entry"
-            animate="center"
-            exit="exit"
-            key={visible}
-          >
-            {visible}
-          </Box>
-        }
-      </AnimatePresence>
-      <button onClick={nextPlease}>next</button>
-      <button onClick={prevPlease}>prev</button>
+    <Wrapper onClick={toggleClicked}>
+      {/* layoutId = 서로다른 컴포넌트를 애니메이션 동기화 시킴 */}
+      <Box>{!clicked ? <Circle layoutId="circle" /> : null}</Box>
+      <Box>{clicked ? <Circle layoutId="circle" /> : null}</Box>
+      <Box
+        style={{
+          justifyContent: clicked ? "center" : "flex-start",
+          alignItems: clicked ? "center" : "flex-start",
+        }}
+      >
+        {/* layout = 컴포넌트의 layout이 변할때 애니메이션을 생성 */}
+        <Circle layout />
+      </Box>
     </Wrapper>
   );
 }
