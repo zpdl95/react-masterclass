@@ -41,10 +41,6 @@ const Overlay = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  div {
-    width: 50%;
-    height: 30%;
-  }
 `;
 
 const overlayVariants: Variants = {
@@ -54,27 +50,34 @@ const overlayVariants: Variants = {
 };
 
 function App() {
-  const [clicked, setClicked] = useState(false);
-  const toggle = () => setClicked((prev) => !prev);
+  /* useState로 각 id를 추출하고 */
+  const [id, setId] = useState<null | number>(null);
+
   return (
-    /* layoutId를 이용한 멋진 layout애니메이션 */
-    <Wrapper onClick={toggle}>
+    /* 추출한 id를 가지고 map과 함께 각각의 박스가 따로 연결된것 처럼 보임 */
+    <Wrapper>
       <Grid>
-        <Box layoutId="good" />
-        <Box />
-        <Box />
-        <Box />
+        {[1, 2, 3, 4].map((i) => (
+          <Box onClick={() => setId(i)} layoutId={i + ""} key={i}>
+            {i}
+          </Box>
+        ))}
       </Grid>
       <AnimatePresence>
-        {clicked && (
-          <Overlay
-            variants={overlayVariants}
-            initial="entry"
-            animate="showing"
-            exit="exit"
-          >
-            <Box layoutId="good" />
-          </Overlay>
+        {id && (
+          <>
+            <Overlay
+              onClick={() => setId(null)}
+              variants={overlayVariants}
+              initial="entry"
+              animate="showing"
+              exit="exit"
+            ></Overlay>
+            <Box
+              style={{ width: "50%", height: "30%", position: "absolute" }}
+              layoutId={id + ""}
+            />
+          </>
         )}
       </AnimatePresence>
     </Wrapper>
