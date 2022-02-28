@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import App from "./App";
-import { lightTheme } from "./theme";
+import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
 /* "https://fonts.google.com"에서 폰트를 받아옴 */
@@ -68,7 +68,7 @@ ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
       {/* <ThemeProvider> 컴포넌트의 하위 컴포넌트는 theme 변수를 사용할 수 있다. */}
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <App />
       </ThemeProvider>
