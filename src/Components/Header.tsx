@@ -1,15 +1,19 @@
-import { motion, Variants } from "framer-motion";
-import { useState } from "react";
+import {
+  motion,
+  useAnimation,
+  useViewportScroll,
+  Variants,
+} from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   width: 100%;
-  background-color: black;
   color: white;
   padding: 20px 60px;
 `;
@@ -49,7 +53,7 @@ const Item = styled.li`
   }
 `;
 
-const Search = styled.span`
+const Search = styled(motion.span)`
   position: relative;
   display: flex;
   align-items: center;
@@ -65,6 +69,13 @@ const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
   right: 35px;
+  color: white;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.white.lighter};
+  padding: 5px 10px;
+  padding-left: 35px;
+  z-index: -1;
+  font-size: 16px;
 `;
 
 const Circle = styled(motion.span)`
@@ -89,17 +100,46 @@ const logoVariants: Variants = {
   },
 };
 
+const navVariants: Variants = {
+  top: { backgroundColor: "rgba(0,0,0,.0)" },
+  scroll: { backgroundColor: "rgba(0,0,0,1)" },
+};
+
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
+  /* useAnimation = 이 훅을 사용해 애니메이션을 코드로 제어 가능 */
+  const inputAnimaiton = useAnimation();
+  const navAnimation = useAnimation();
+  /* useViewportScroll = 스크롤의 모션을 감지해 좌표값 or 진행도를 알려줌 */
+  /* scrollY이 값은 변해도 rerendering하지 않음 */
+  const { scrollY } = useViewportScroll();
 
-  const openSearch = () => {
+  const toggleSearsh = () => {
+    if (searchOpen) {
+      /* 해당 조건일때 ↓의 애니메이션 실행 */
+      /* 함수를 사용해서 애니메이션을 실행하는 방법 */
+      inputAnimaiton.start({ scaleX: 0 });
+    } else {
+      inputAnimaiton.start({ scaleX: 1 });
+    }
     setSearchOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    /* scrollY.onChange() 이것을 사용하지 않으면 변화를 감지할 수 없음 */
+    scrollY.onChange(() => {
+      if (scrollY.get() > 100) {
+        navAnimation.start("scroll");
+      } else {
+        navAnimation.start("top");
+      }
+    });
+  }, [scrollY, navAnimation]);
+
   return (
-    <Nav>
+    <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
       <Col>
         <Logo variants={logoVariants} whileHover="active" viewBox="0 0 111 30">
           <motion.path
@@ -123,9 +163,9 @@ function Header() {
       <Col>
         <Search>
           <motion.svg
-            onClick={openSearch}
+            onClick={toggleSearsh}
             style={{ cursor: "pointer" }}
-            animate={{ translateX: searchOpen ? -210 : 0 }}
+            animate={{ translateX: searchOpen ? -240 : 0 }}
             transition={{ type: "tween" }}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -138,7 +178,8 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
-            animate={{ scaleX: searchOpen ? 1 : 0 }}
+            initial={{ scaleX: 0 }}
+            animate={inputAnimaiton}
             transition={{ type: "tween" }}
             placeholder="Search for the movie or tv show..."
           />
