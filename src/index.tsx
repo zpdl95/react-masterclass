@@ -56,12 +56,15 @@ table {
 * {
   box-sizing: border-box;
 }
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-}
 a {
   text-decoration: none;
   color: inherit;
+}
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  color:${(props) => props.theme.white.darker};
+  background-color:black;
+  line-height: 1.2;
 }
 `;
 
