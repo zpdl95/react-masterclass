@@ -130,7 +130,7 @@ function Header() {
   useEffect(() => {
     /* scrollY.onChange() 이것을 사용하지 않으면 변화를 감지할 수 없음 */
     scrollY.onChange(() => {
-      if (scrollY.get() > 100) {
+      if (scrollY.get() > 30) {
         navAnimation.start("scroll");
       } else {
         navAnimation.start("top");

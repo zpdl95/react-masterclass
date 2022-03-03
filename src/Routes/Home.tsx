@@ -30,6 +30,7 @@ const Banner = styled.div<{ bgPhoto: string }>`
     ),
     url(${(props) => props.bgPhoto});
   background-size: cover;
+  background-position: center;
 `;
 
 const Title = styled.h2`
@@ -50,29 +51,48 @@ const Slider = styled(motion.div)`
 const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  gap: 5px;
   position: absolute;
   width: 100%;
 `;
 
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   height: 200px;
+  background-image: url(${(props) => props.bgPhoto});
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
 `;
 
 const rowVariants: Variants = {
-  hidden: { x: window.innerWidth },
-  visible: { x: 0, transition: { type: "tween" } },
+  hidden: { x: window.innerWidth - 10 },
+  visible: { x: 0, transition: { type: "tween", duration: 1 } },
   exit: {
-    x: -window.innerWidth,
-    transition: { type: "tween" },
+    x: -window.innerWidth + 10,
+    transition: { type: "tween", duration: 1 },
   },
 };
+
+const offset = 6;
 
 function Home() {
   const { data: nowPlayingData, isLoading: nowPlayingIsLoading } =
     useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
   const [index, setIndex] = useState(0);
+  /* Row가 사라지는 상태를 저장. 애니메이션이 안 겹치게 하기 위함 */
+  const [leaving, setLeaving] = useState(false);
+
+  const increaseIndex = () => {
+    if (nowPlayingData) {
+      if (leaving) return;
+      setLeaving(true);
+      const totalMovies = nowPlayingData.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+  const toggleLeaving = () => setLeaving((prev) => !prev);
 
   return (
     <Wrapper>
@@ -80,7 +100,7 @@ function Home() {
       {!nowPlayingIsLoading && (
         <>
           <Banner
-            onClick={() => setIndex((prev) => prev + 1)}
+            onClick={increaseIndex}
             bgPhoto={makeImagePath(
               nowPlayingData?.results[0].backdrop_path || ""
             )}
@@ -89,7 +109,9 @@ function Home() {
             <Overview>{nowPlayingData?.results[0].overview}</Overview>
           </Banner>
           <Slider>
-            <AnimatePresence>
+            {/* onExitComplete = 애니메이션이 완료되면 함수가 실해됨 */}
+            {/* initial={false}처럼 컴포넌트가 mount됐을때 초기 위치or애니메이션을 제거할 수 있다 */}
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
                 initial="hidden"
@@ -97,9 +119,15 @@ function Home() {
                 exit="exit"
                 key={index}
               >
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Box key={i}>{i}</Box>
-                ))}
+                {nowPlayingData?.results
+                  .slice(1)
+                  .slice(offset * index, offset * index + offset)
+                  .map((movie) => (
+                    <Box
+                      key={movie.id}
+                      bgPhoto={makeImagePath(movie.backdrop_path)}
+                    />
+                  ))}
               </Row>
             </AnimatePresence>
           </Slider>
