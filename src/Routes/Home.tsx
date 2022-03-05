@@ -63,6 +63,13 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-size: cover;
   background-position: center;
   border-radius: 5px;
+  &:first-child {
+    /* transform-origin = 요소 변형의 원점을 설정 */
+    transform-origin: left;
+  }
+  &:last-child {
+    transform-origin: right;
+  }
 `;
 
 const rowVariants: Variants = {
@@ -74,7 +81,18 @@ const rowVariants: Variants = {
   },
 };
 
+const boxVariants: Variants = {
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: { type: "tween", delay: 1, duration: 0.2 },
+  },
+};
+
 const offset = 6;
+
+const NEXFLIX_LOGO_URL =
+  "https://assets.brand.microsites.netflix.io/assets/2800a67c-4252-11ec-a9ce-066b49664af6_cm_800w.jpg?v=4";
 
 function Home() {
   const { data: nowPlayingData, isLoading: nowPlayingIsLoading } =
@@ -124,8 +142,15 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
+                      variants={boxVariants}
+                      whileHover={"hover"}
+                      transition={{ type: "tween" }}
                       key={movie.id}
-                      bgPhoto={makeImagePath(movie.backdrop_path)}
+                      bgPhoto={
+                        movie.backdrop_path
+                          ? makeImagePath(movie.backdrop_path)
+                          : NEXFLIX_LOGO_URL
+                      }
                     />
                   ))}
               </Row>
