@@ -72,6 +72,20 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
 `;
 
+const Info = styled(motion.div)`
+  height: 100px;
+  opacity: 0;
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  position: absolute;
+  bottom: -100px;
+  width: 100%;
+  h4 {
+    text-align: center;
+    font-size: 18px;
+  }
+`;
+
 const rowVariants: Variants = {
   hidden: { x: window.innerWidth - 10 },
   visible: { x: 0, transition: { type: "tween", duration: 1 } },
@@ -84,8 +98,15 @@ const rowVariants: Variants = {
 const boxVariants: Variants = {
   hover: {
     scale: 1.3,
-    y: -50,
-    transition: { type: "tween", delay: 1, duration: 0.2 },
+    y: -65,
+    transition: { type: "tween", delay: 0.6, duration: 0.2 },
+  },
+};
+
+const infoVariants: Variants = {
+  hover: {
+    opacity: 1,
+    transition: { type: "tween", delay: 0.6, duration: 0.2 },
   },
 };
 
@@ -151,7 +172,11 @@ function Home() {
                           ? makeImagePath(movie.backdrop_path)
                           : NEXFLIX_LOGO_URL
                       }
-                    />
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
