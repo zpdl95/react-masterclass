@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
@@ -63,6 +64,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-size: cover;
   background-position: center;
   border-radius: 5px;
+  cursor: pointer;
   &:first-child {
     /* transform-origin = 요소 변형의 원점을 설정 */
     transform-origin: left;
@@ -121,6 +123,8 @@ function Home() {
   const [index, setIndex] = useState(0);
   /* Row가 사라지는 상태를 저장. 애니메이션이 안 겹치게 하기 위함 */
   const [leaving, setLeaving] = useState(false);
+  const history = useHistory();
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
 
   const increaseIndex = () => {
     if (nowPlayingData) {
@@ -132,6 +136,10 @@ function Home() {
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
+
+  const onBoxClicked = (movieId: number) => {
+    history.push(`/movies/${movieId}`);
+  };
 
   return (
     <Wrapper>
@@ -163,6 +171,7 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
+                      layoutId={movie.id + ""}
                       variants={boxVariants}
                       whileHover={"hover"}
                       transition={{ type: "tween" }}
@@ -172,6 +181,7 @@ function Home() {
                           ? makeImagePath(movie.backdrop_path)
                           : NEXFLIX_LOGO_URL
                       }
+                      onClick={() => onBoxClicked(movie.id)}
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
@@ -181,6 +191,22 @@ function Home() {
               </Row>
             </AnimatePresence>
           </Slider>
+          <AnimatePresence>
+            {bigMovieMatch && (
+              <motion.div
+                layoutId={bigMovieMatch.params.movieId}
+                style={{
+                  position: "absolute",
+                  width: "40vw",
+                  height: "80vh",
+                  backgroundColor: "white",
+                  top: 50,
+                  left: 250,
+                  margin: "auto",
+                }}
+              />
+            )}
+          </AnimatePresence>
         </>
       )}
     </Wrapper>

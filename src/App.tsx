@@ -9,9 +9,10 @@ function App() {
     <Router>
       <Header />
       <Switch>
-        <Route path={"/"} exact component={() => <Home />} />
         <Route path={"/tv"} component={() => <TV />} />
         <Route path={"/search"} component={() => <Search />} />
+        {/* path를 array로 여러개 사용 가능 */}
+        <Route path={["/", "/movies:movieId"]} component={() => <Home />} />
       </Switch>
     </Router>
   );
